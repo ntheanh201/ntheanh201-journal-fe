@@ -1,3 +1,5 @@
+import 'styles/index.css'
+
 // global styles shared across the entire site
 import 'styles/global.css'
 

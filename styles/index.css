@@ -1,0 +1,39 @@
+/* Reset */
+html, body, div, span, p, ul, li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+  background-color: #fcfcf7;
+}
+
+/* Responsiveness */
+@media only screen and (max-width: 680px) {
+  div#content {
+    width: 90%;
+    padding: 0 5%;
+    font-size: 83.333%;
+  }
+}
+
+@media only screen and (min-width: 681px) {
+  div#content {
+    width: 38em;
+  }
+}
+
+/* Layout */
+div#content {
+  margin: 5em auto 14em;
+}
+
+p {
+  line-height: 1.5em;
+  font-size: 1.1em;
+  margin-bottom: 1em;
+}

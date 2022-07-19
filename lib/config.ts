@@ -129,9 +129,14 @@ export const host = isDev ? `http://localhost:${port}` : `https://${domain}`
 
 export const apiBaseUrl = `/api`
 
+export const journalApiBaseUrl = `${process.env.API_BASE_URL}/v1`
+
 export const api = {
   searchNotion: `${apiBaseUrl}/search-notion`,
-  getSocialImage: `${apiBaseUrl}/social-image`
+  getSocialImage: `${apiBaseUrl}/social-image`,
+  getPages: `${journalApiBaseUrl}/pages`,
+  getPage: (id: string) => `${journalApiBaseUrl}/pages/${id}`,
+  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/${id}/children`,
 }
 
 // ----------------------------------------------------------------------------
