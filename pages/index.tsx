@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { domain } from 'lib/config'
-import { resolveNotionPage } from 'lib/resolve-notion-page'
+import { resolveJournalPage } from 'lib/journal/resolve-journal-page'
 
 export const getStaticProps = async () => {
   try {
-    const props = await resolveNotionPage(domain)
+    const props = await resolveJournalPage(domain)
 
     return { props, revalidate: 10 }
   } catch (err) {
@@ -17,6 +17,7 @@ export const getStaticProps = async () => {
 }
 
 export default function NotionDomainPage(props) {
+  console.log('props: ', props)
   return (
     <div id='content'>
       <p>Nguyen The Anh</p>
