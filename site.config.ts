@@ -12,8 +12,9 @@ export default siteConfig({
 
   // social usernames (optional)
   // twitter: 'ntheanh201',
-  // github: 'ntheanh201',
-  // linkedin: 'ntheanh201',
+  github: 'ntheanh201',
+  facebook: 'ntheanh201',
+  linkedin: 'ntheanh201',
   // newsletter: '#', // optional newsletter URL
   // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`
 

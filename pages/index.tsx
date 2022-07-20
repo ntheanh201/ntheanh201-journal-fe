@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { domain } from 'lib/config'
 import { resolveJournalPages } from 'lib/journal/resolve-journal-page'
+import * as config from '../lib/config'
+import { PageHead } from '../components/PageHead'
 
 export const getStaticProps = async () => {
   try {
@@ -15,36 +17,66 @@ export const getStaticProps = async () => {
 
 export default function NotionDomainPage(props) {
   return (
-    <div id='content'>
-      <p>
-        This is the site of <b>The Anh Nguyen</b>, software engineer, passionate
-        about devops/cloud.
-      </p>
-      <p className='name-header'>
-        <a href='https://github.com/ntheanh201'>Github</a> -{' '}
-        <a href='https://facebook.com/ntheanh201'>Facebook</a>
-      </p>
-      <ul className='index'>
-        {props?.pages?.results?.map(({ id, properties }) => (
-          <li key={id}>
+    <>
+      <PageHead title={config.author} />
+      <div id='content'>
+        <p>
+          This is the site of <b>The Anh Nguyen</b>, software engineer, passionate
+          about devops/cloud.
+        </p>
+        <p className=''>
+          <a
+            href={`https://github.com/${config.github}`}
+            title={`GitHub @${config.github}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            GitHub
+          </a>
+          {' '}-{' '}
+          <a
+            href={`https://facebook.com/${config.facebook}`}
+            title={`Facebook @${config.facebook}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Facebook
+          </a>
+          {' '}-{' '}
+          <a
+            href={`https://linkedin.com/in/${config.linkedin}`}
+            title={`LinkedIn @${config.linkedin}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            LinkedIn
+          </a>
+        </p>
+        <ul className='index'>
+          {props?.pages?.results?.map(({ id, properties }) => (
+            <li key={id}>
             <span className='index-date'>
               {properties.type.select?.name === 'Page'
                 ? '∞'
                 : properties.date.date?.start}
             </span>
-            <a href={properties.slug.rich_text[0]?.plain_text}>
-              {properties.title.title[0]?.plain_text}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p>
-        Inspired by{' '}
-        <a className='twitter-footer-link' href='https://markmcgranaghan.com/'>
-          @mmcgrana
-        </a>
-        .
-      </p>
-    </div>
+              <a href={properties.slug.rich_text[0]?.plain_text}>
+                {properties.title.title[0]?.plain_text}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p>
+          Inspired by{' '}
+          <a className='twitter-footer-link'
+             href='https://markmcgranaghan.com/'
+             target='_blank'
+             rel='noopener noreferrer'>
+            @mmcgrana
+          </a>
+          .
+        </p>
+      </div>
+    </>
   )
 }
