@@ -9,11 +9,14 @@ import {
   site
 } from '../config'
 import { db } from '../db'
-import { getPage } from './journal'
 import { getSiteMap } from '../get-site-map'
+import { getJournalPages, getPage } from './journal'
 
-export async function resolveJournalPages(domain: string) {
-  console.log(domain)
+export async function resolveJournalPages() {
+  const pages = await getJournalPages()
+  return {
+    pages
+  }
 }
 
 export async function resolveJournalPage(domain: string, rawPageId?: string) {

@@ -1,13 +1,8 @@
 import pMap from 'p-map'
 import pMemoize from 'p-memoize'
-import { ExtendedRecordMap, SearchResults } from 'notion-types'
+import { ExtendedRecordMap } from 'notion-types'
 import { mergeRecordMaps } from 'notion-utils'
-import {
-  isPreviewImageSupportEnabled,
-  navigationLinks,
-  navigationStyle
-} from 'lib/config'
-import { getPreviewImageMap } from 'lib/preview-images'
+import { navigationLinks, navigationStyle } from 'lib/config'
 // import * as types from '../types'
 import { api } from '../config'
 import ExpiryMap from 'expiry-map'
@@ -41,7 +36,7 @@ export const getJournalPage = pMemoize(getJournalPageImpl, {
 })
 
 async function getJournalPageImpl(id: string): Promise<any> {
-  return fetch(api.getPage(id), {
+  return fetch(api.getBlockChildren(id), {
     method: 'GET',
     headers: {
       'content-type': 'application/json'
@@ -68,8 +63,7 @@ const getNavigationLinkPages = pMemoize(
     if (navigationStyle !== 'default' && navigationLinkPageIds.length) {
       return pMap(
         navigationLinkPageIds,
-        async (navigationLinkPageId) =>
-          getJournalPage(navigationLinkPageId),
+        async (navigationLinkPageId) => getJournalPage(navigationLinkPageId),
         {
           concurrency: 4
         }
@@ -98,14 +92,10 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
     }
   }
 
-  if (isPreviewImageSupportEnabled) {
-    const previewImageMap = await getPreviewImageMap(recordMap)
-    ;(recordMap as any).preview_images = previewImageMap
-  }
+  // if (isPreviewImageSupportEnabled) {
+  //   const previewImageMap = await getPreviewImageMap(recordMap)
+  //   ;(recordMap as any).preview_images = previewImageMap
+  // }
 
   return recordMap
-}
-
-export async function search(): Promise<SearchResults> {
-  return null
 }

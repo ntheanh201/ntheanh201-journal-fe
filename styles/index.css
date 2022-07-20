@@ -1,5 +1,5 @@
 /* Reset */
-html, body, div, span, p, ul, li {
+html, body, div, span, h1, h2, p, figure, figcaption, table, th, td, blockquote, a, em, img, b, i, ol, ul, li {
   margin: 0;
   padding: 0;
   border: 0;
@@ -7,9 +7,77 @@ html, body, div, span, p, ul, li {
   vertical-align: baseline;
 }
 
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
 body {
   line-height: 1;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: none;
+}
+
+/* Fonts */
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../assets/NotoSerif-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: normal;
+  font-weight: 700;
+  src: url(../assets/NotoSerif-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Serif';
+  font-style: italic;
+  font-weight: 400;
+  src: url(../assets/NotoSerif-Italic.ttf) format('truetype');
+}
+
+/* Font selection */
+p, blockquote, li {
+  font-family: 'Noto Serif', serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+p.date, em {
+  font-family: 'Noto Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+h1, h2, b {
+  font-family: 'Noto Serif', serif;
+  font-style: normal;
+  font-weight: 700;
+}
+
+
+/* Colors */
+body {
   background-color: #fcfcf7;
+}
+
+h1, h2, p, blockquote, li, a, th, td {
+  color: #0c0c0c;
+}
+
+img.contrast-border {
+  border-radius: 0.5em;
+  border: 1px solid grey;
 }
 
 /* Responsiveness */
@@ -32,8 +100,93 @@ div#content {
   margin: 5em auto 14em;
 }
 
+h1 {
+  line-height: 1.5em;
+  font-size: 1.5em;
+}
+
+h1.dateless {
+  margin-bottom: 1em;
+}
+
+p.date {
+  margin-bottom: 1.5em;
+}
+
+h2 {
+  line-height: 1.5em;
+  font-size: 1.1em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
 p {
   line-height: 1.5em;
   font-size: 1.1em;
   margin-bottom: 1em;
+}
+
+blockquote {
+  line-height: 1.5em;
+  font-size: 0.9em;
+  margin-left: 3em;
+  margin-right: 3em;
+  margin-bottom: 1em;
+}
+
+sup {
+  vertical-align: top;
+  position: relative;
+  top: -0.4em;
+  font-size: 0.8em;
+}
+
+ul {
+  margin-bottom: 1em;
+  padding-left: 1.4em;
+  list-style-type: square;
+}
+
+ul.index {
+  margin-top: 2em;
+  list-style: none;
+  padding-left: 0;
+}
+
+span.index-date {
+  color: grey;
+  padding-right: 0.5em;
+}
+
+li {
+  line-height: 1.5em;
+  font-size: 1.1em;
+  list-style-position: outside;
+  margin-bottom: 1em;
+}
+
+img {
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+p.name-header, p.name-header a {
+  color: grey;
+}
+
+p.name-header {
+  margin-bottom: 3em;
+}
+
+p.twitter-footer, p.twitter-footer a {
+  color: grey;
+}
+
+.twitter-footer-link {
+  color: grey;
+}
+
+p.twitter-footer {
+  margin-top: 1em;
+  margin-bottom: 2em;
 }

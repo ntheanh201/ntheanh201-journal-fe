@@ -1,29 +1,50 @@
 import * as React from 'react'
 import { domain } from 'lib/config'
-import { resolveJournalPage } from 'lib/journal/resolve-journal-page'
+import { resolveJournalPages } from 'lib/journal/resolve-journal-page'
 
 export const getStaticProps = async () => {
   try {
-    const props = await resolveJournalPage(domain)
+    const props = await resolveJournalPages()
 
-    return { props, revalidate: 10 }
+    return { props }
   } catch (err) {
     console.error('page error', domain, err)
-
-    // we don't want to publish the error version of this page, so
-    // let next.js know explicitly that incremental SSG failed
     throw err
   }
 }
 
 export default function NotionDomainPage(props) {
-  console.log('props: ', props)
   return (
     <div id='content'>
-      <p>Nguyen The Anh</p>
-      <ul>
-        <li>Why VSCode</li>
+      <p>
+        This is the site of <b>The Anh Nguyen</b>, software engineer, passionate
+        about devops/cloud.
+      </p>
+      <p className='name-header'>
+        <a href='https://github.com/ntheanh201'>Github</a> -{' '}
+        <a href='https://facebook.com/ntheanh201'>Facebook</a>
+      </p>
+      <ul className='index'>
+        {props?.pages?.results?.map(({ id, properties }) => (
+          <li key={id}>
+            <span className='index-date'>
+              {properties.type.select?.name === 'Page'
+                ? '∞'
+                : properties.date.date?.start}
+            </span>
+            <a href={properties.slug.rich_text[0]?.plain_text}>
+              {properties.title.title[0]?.plain_text}
+            </a>
+          </li>
+        ))}
       </ul>
+      <p>
+        Inspired by{' '}
+        <a className='twitter-footer-link' href='https://markmcgranaghan.com/'>
+          @mmcgrana
+        </a>
+        .
+      </p>
     </div>
   )
 }

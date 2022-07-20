@@ -1,16 +1,17 @@
 import * as React from 'react'
 import { GetStaticProps } from 'next'
 import { isDev, domain } from 'lib/config'
-import { getSiteMap } from 'lib/get-site-map'
-import { resolveNotionPage } from 'lib/resolve-notion-page'
 import { PageProps, Params } from 'lib/types'
 import { NotionPage } from 'components'
+import { resolveJournalPage } from '../lib/journal/resolve-journal-page'
 
-export const getStaticProps: GetStaticProps<PageProps, Params> = async (context) => {
+export const getStaticProps: GetStaticProps<PageProps, Params> = async (
+  context
+) => {
   const rawPageId = context.params.pageId as string
 
   try {
-    const props = await resolveNotionPage(domain, rawPageId)
+    const props = await resolveJournalPage(domain, rawPageId)
 
     return { props, revalidate: 10 }
   } catch (err) {
@@ -30,20 +31,24 @@ export async function getStaticPaths() {
     }
   }
 
-  const siteMap = await getSiteMap()
-
-  const staticPaths = {
-    paths: Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
-      params: {
-        pageId
-      }
-    })),
-    // paths: [],
+  return {
+    paths: [],
     fallback: true
   }
-
-  console.log(staticPaths.paths)
-  return staticPaths
+  // const siteMap = await getSiteMap()
+  //
+  // const staticPaths = {
+  //   paths: Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
+  //     params: {
+  //       pageId
+  //     }
+  //   })),
+  //   // paths: [],
+  //   fallback: true
+  // }
+  //
+  // console.log(staticPaths.paths)
+  // return staticPaths
 }
 
 export default function NotionDomainDynamicPage(props) {

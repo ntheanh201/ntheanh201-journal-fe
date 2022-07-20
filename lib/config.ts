@@ -136,7 +136,7 @@ export const api = {
   getSocialImage: `${apiBaseUrl}/social-image`,
   getPages: `${journalApiBaseUrl}/pages`,
   getPage: (id: string) => `${journalApiBaseUrl}/pages/${id}`,
-  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/${id}/children`,
+  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/blocks/${id}`,
 }
 
 // ----------------------------------------------------------------------------
