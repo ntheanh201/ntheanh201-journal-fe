@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { domain } from 'lib/config'
+import Link from 'next/link'
 import { resolveJournalPages } from 'lib/journal/resolve-journal-page'
 import * as config from '../lib/config'
 import { PageHead } from '../components/PageHead'
@@ -60,9 +61,9 @@ export default function NotionDomainPage(props) {
                 ? '∞'
                 : properties.date.date?.start}
             </span>
-              <a href={properties.slug.rich_text[0]?.plain_text}>
+              <Link href={properties.slug.rich_text[0]?.plain_text}>
                 {properties.title.title[0]?.plain_text}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

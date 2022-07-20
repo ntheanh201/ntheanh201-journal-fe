@@ -284,6 +284,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
       />
 
       {/*<GitHubShareButton />*/}
+      <p className='twitter-footer'>— <Link href={`https://facebook.com/${config.facebook}`}>@ntheanh201</Link></p>
+
     </>
   )
 }

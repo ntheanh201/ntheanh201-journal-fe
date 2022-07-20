@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import { GetStaticProps } from 'next'
 import { domain, isDev } from 'lib/config'
 import { PageProps, Params } from 'lib/types'
@@ -58,6 +59,12 @@ export async function getStaticPaths() {
 }
 
 export default function NotionDomainDynamicPage(props) {
-  return <NotionPage {...props} />
-  // return <div>Post</div>
+  return (
+    <div id='content'>
+      <p className='name-header'>
+        <Link href='/'>← The Anh Nguyen</Link>
+      </p>
+      <NotionPage {...props} />
+    </div>
+  )
 }
