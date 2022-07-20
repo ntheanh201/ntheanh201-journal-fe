@@ -9,27 +9,7 @@ import { parsePageId } from 'notion-utils'
 import posthog from 'posthog-js'
 import { getEnv, getSiteConfig } from './get-config-value'
 import { NavigationLink } from './site-config'
-import {
-  PageUrlOverridesInverseMap,
-  PageUrlOverridesMap,
-  NavigationStyle,
-  Site
-} from './types'
-
-export const rootNotionPageId: string = parsePageId(
-  getSiteConfig('rootNotionPageId'),
-  { uuid: false }
-)
-
-if (!rootNotionPageId) {
-  throw new Error('Config error invalid "rootNotionPageId"')
-}
-
-// if you want to restrict pages to a single notion workspace (optional)
-export const rootNotionSpaceId: string | null = parsePageId(
-  getSiteConfig('rootNotionSpaceId', null),
-  { uuid: true }
-)
+import { NavigationStyle, PageUrlOverridesInverseMap, PageUrlOverridesMap, Site } from './types'
 
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},
@@ -56,6 +36,7 @@ export const language: string = getSiteConfig('language', 'en')
 // social accounts
 export const twitter: string | null = getSiteConfig('twitter', null)
 export const github: string | null = getSiteConfig('github', null)
+export const facebook: string | null = getSiteConfig('facebook', null)
 export const youtube: string | null = getSiteConfig('youtube', null)
 export const linkedin: string | null = getSiteConfig('linkedin', null)
 export const newsletter: string | null = getSiteConfig('newsletter', null)
@@ -135,8 +116,10 @@ export const api = {
   searchNotion: `${apiBaseUrl}/search-notion`,
   getSocialImage: `${apiBaseUrl}/social-image`,
   getPages: `${journalApiBaseUrl}/pages`,
-  getPage: (id: string) => `${journalApiBaseUrl}/pages/${id}`,
-  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/blocks/${id}`,
+  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/record/${id}`,
+  getBlocks: `${journalApiBaseUrl}/pages/syncRecordValues`,
+  getSignedFileUrls: `${journalApiBaseUrl}/pages/getSignedFileUrls`,
+  queryCollection: `${journalApiBaseUrl}/queryCollection`
 }
 
 // ----------------------------------------------------------------------------
@@ -144,16 +127,14 @@ export const api = {
 export const site: Site = {
   domain,
   name,
-  rootNotionPageId,
-  rootNotionSpaceId,
   description
 }
 
 export const fathomId = isDev ? null : process.env.NEXT_PUBLIC_FATHOM_ID
 export const fathomConfig = fathomId
   ? {
-      excludedDomains: ['localhost', 'localhost:3000']
-    }
+    excludedDomains: ['localhost', 'localhost:3000']
+  }
   : undefined
 
 export const posthogId = process.env.NEXT_PUBLIC_POSTHOG_ID

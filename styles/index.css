@@ -148,7 +148,7 @@ ul {
 }
 
 ul.index {
-  margin-top: 2em;
+  margin: 2em 0;
   list-style: none;
   padding-left: 0;
 }

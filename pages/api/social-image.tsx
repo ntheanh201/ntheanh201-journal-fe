@@ -1,19 +1,13 @@
 import * as React from 'react'
 import { withOGImage } from 'next-api-og-image'
 
-import {
-  getBlockTitle,
-  getBlockIcon,
-  getPageProperty,
-  isUrl,
-  parsePageId
-} from 'notion-utils'
+import { getBlockIcon, getBlockTitle, getPageProperty, isUrl, parsePageId } from 'notion-utils'
 import { PageBlock } from 'notion-types'
 
-import { notion } from 'lib/notion-api'
 import { mapImageUrl } from 'lib/map-image-url'
 import { interRegular } from 'lib/fonts'
 import * as config from 'lib/config'
+import { getJournalPage } from '../../lib/journal/get-page'
 
 /**
  * Social image generation via headless chrome.
@@ -34,7 +28,7 @@ export default withOGImage<'query', 'id'>({
         throw new Error('Invalid notion page id')
       }
 
-      const recordMap = await notion.getPage(pageId)
+      const recordMap = await getJournalPage(pageId)
 
       const keys = Object.keys(recordMap?.block || {})
       const block = recordMap?.block?.[keys[0]]?.value
@@ -48,8 +42,8 @@ export default withOGImage<'query', 'id'>({
       const title = getBlockTitle(block, recordMap) || config.name
       const image = mapImageUrl(
         getPageProperty<string>('Social Image', block, recordMap) ||
-          (block as PageBlock).format?.page_cover ||
-          config.defaultPageCover,
+        (block as PageBlock).format?.page_cover ||
+        config.defaultPageCover,
         block
       )
 
@@ -86,59 +80,59 @@ export default withOGImage<'query', 'id'>({
       const dateUpdated = lastUpdatedTime
         ? new Date(lastUpdatedTime)
         : publishedTime
-        ? new Date(publishedTime)
-        : undefined
+          ? new Date(publishedTime)
+          : undefined
       const date =
         isBlogPost && dateUpdated
           ? `${dateUpdated.toLocaleString('en-US', {
-              month: 'long'
-            })} ${dateUpdated.getFullYear()}`
+            month: 'long'
+          })} ${dateUpdated.getFullYear()}`
           : undefined
       const detail = date || config.domain
 
       return (
         <html>
-          <head>
-            <style dangerouslySetInnerHTML={{ __html: style }} />
-          </head>
+        <head>
+          <style dangerouslySetInnerHTML={{ __html: style }} />
+        </head>
 
-          <body>
-            <div className='container'>
-              <div className='horiz'>
-                <div className='lhs'>
-                  <div className='main'>
-                    <h1 className='title'>{title}</h1>
-                  </div>
+        <body>
+        <div className='container'>
+          <div className='horiz'>
+            <div className='lhs'>
+              <div className='main'>
+                <h1 className='title'>{title}</h1>
+              </div>
 
-                  <div className='metadata'>
-                    {authorImage && (
-                      <div
-                        className='author-image'
-                        style={{ backgroundImage: `url(${authorImage})` }}
-                      />
-                    )}
-
-                    {(author || detail) && (
-                      <div className='metadata-rhs'>
-                        {author && <div className='author'>{author}</div>}
-                        {detail && <div className='detail'>{detail}</div>}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {image && (
-                  <img
-                    src={image}
-                    className='rhs'
-                    style={{
-                      objectPosition: imageObjectPosition || undefined
-                    }}
+              <div className='metadata'>
+                {authorImage && (
+                  <div
+                    className='author-image'
+                    style={{ backgroundImage: `url(${authorImage})` }}
                   />
+                )}
+
+                {(author || detail) && (
+                  <div className='metadata-rhs'>
+                    {author && <div className='author'>{author}</div>}
+                    {detail && <div className='detail'>{detail}</div>}
+                  </div>
                 )}
               </div>
             </div>
-          </body>
+
+            {image && (
+              <img
+                src={image}
+                className='rhs'
+                style={{
+                  objectPosition: imageObjectPosition || undefined
+                }}
+              />
+            )}
+          </div>
+        </div>
+        </body>
         </html>
       )
     }

@@ -1,14 +1,8 @@
 import { siteConfig } from './lib/site-config'
 
 export default siteConfig({
-  // the site's root Notion page (required)
-  rootNotionPageId: '7875426197cf461698809def95960ebf',
-
-  // if you want to restrict pages to a single notion workspace (optional)
-  // (this should be a Notion ID; see the docs for how to extract this)
-  rootNotionSpaceId: null,
-
   // basic site info (required)
+  apiUrl: 'https://backend.kinn.dev',
   name: 'kinn',
   domain: 'kinn.dev',
   author: 'The Anh Nguyen',
@@ -18,8 +12,9 @@ export default siteConfig({
 
   // social usernames (optional)
   // twitter: 'ntheanh201',
-  // github: 'ntheanh201',
-  // linkedin: 'ntheanh201',
+  github: 'ntheanh201',
+  facebook: 'ntheanh201',
+  linkedin: 'ntheanh201',
   // newsletter: '#', // optional newsletter URL
   // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`
 

@@ -1,15 +1,14 @@
-import pMap from 'p-map'
 import pMemoize from 'p-memoize'
 import { ExtendedRecordMap } from 'notion-types'
+import { api, navigationLinks, navigationStyle } from '../config'
+import { Database } from '../interfaces/database'
 import { mergeRecordMaps } from 'notion-utils'
-import { navigationLinks, navigationStyle } from 'lib/config'
-// import * as types from '../types'
-import { api } from '../config'
-import ExpiryMap from 'expiry-map'
+import pMap from 'p-map'
+import { getJournalPage } from './get-page'
 
 export const getJournalPages = pMemoize(getJournalPagesImpl)
 
-async function getJournalPagesImpl(): Promise<any> {
+async function getJournalPagesImpl(): Promise<Database> {
   return fetch(api.getPages, {
     method: 'GET',
     headers: {
@@ -28,31 +27,6 @@ async function getJournalPagesImpl(): Promise<any> {
     .then((res) => res.json())
 }
 
-export const getJournalPage = pMemoize(getJournalPageImpl, {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  cacheKey: (args) => args[0]?.id,
-  cache: new ExpiryMap(10000)
-})
-
-async function getJournalPageImpl(id: string): Promise<any> {
-  return fetch(api.getBlockChildren(id), {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json'
-    }
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res
-      }
-
-      const error: any = new Error(res.statusText)
-      error.response = res
-      return Promise.reject(error)
-    })
-    .then((res) => res.json())
-}
 
 const getNavigationLinkPages = pMemoize(
   async (): Promise<ExtendedRecordMap[]> => {
@@ -63,7 +37,13 @@ const getNavigationLinkPages = pMemoize(
     if (navigationStyle !== 'default' && navigationLinkPageIds.length) {
       return pMap(
         navigationLinkPageIds,
-        async (navigationLinkPageId) => getJournalPage(navigationLinkPageId),
+        async (navigationLinkPageId) =>
+          getJournalPage(navigationLinkPageId, {
+            chunkLimit: 1,
+            fetchMissingBlocks: false,
+            fetchCollections: false,
+            signFileUrls: false
+          }),
         {
           concurrency: 4
         }

@@ -1,15 +1,11 @@
 import pMap from 'p-map'
 import pMemoize from 'p-memoize'
-import { ExtendedRecordMap, SearchParams, SearchResults } from 'notion-types'
+import { ExtendedRecordMap } from 'notion-types'
 import { mergeRecordMaps } from 'notion-utils'
 
-import { notion } from './notion-api'
 import { getPreviewImageMap } from './preview-images'
-import {
-  isPreviewImageSupportEnabled,
-  navigationStyle,
-  navigationLinks
-} from './config'
+import { isPreviewImageSupportEnabled, navigationLinks, navigationStyle } from './config'
+import { getJournalPage } from './journal/get-page'
 
 const getNavigationLinkPages = pMemoize(
   async (): Promise<ExtendedRecordMap[]> => {
@@ -21,7 +17,7 @@ const getNavigationLinkPages = pMemoize(
       return pMap(
         navigationLinkPageIds,
         async (navigationLinkPageId) =>
-          notion.getPage(navigationLinkPageId, {
+          getJournalPage(navigationLinkPageId, {
             chunkLimit: 1,
             fetchMissingBlocks: false,
             fetchCollections: false,
@@ -38,7 +34,7 @@ const getNavigationLinkPages = pMemoize(
 )
 
 export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
-  let recordMap = await notion.getPage(pageId)
+  let recordMap = await getJournalPage(pageId)
 
   if (navigationStyle !== 'default') {
     // ensure that any pages linked to in the custom navigation header have
@@ -61,8 +57,4 @@ export async function getPage(pageId: string): Promise<ExtendedRecordMap> {
   }
 
   return recordMap
-}
-
-export async function search(params: SearchParams): Promise<SearchResults> {
-  return notion.search(params)
 }

@@ -39,9 +39,9 @@ export async function pageAcl({
   const rootSpaceId = rootValue?.space_id
 
   if (
-    rootSpaceId &&
-    site.rootNotionSpaceId &&
-    rootSpaceId !== site.rootNotionSpaceId
+    rootSpaceId
+    // && site.rootNotionSpaceId &&
+    // rootSpaceId !== site.rootNotionSpaceId
   ) {
     if (process.env.NODE_ENV) {
       return {

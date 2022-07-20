@@ -1,10 +1,10 @@
 import RSS from 'rss'
 import type { GetServerSideProps } from 'next'
 import {
-  getBlockParentPage,
+  // getBlockParentPage,
   getBlockTitle,
-  getPageProperty,
-  idToUuid
+  getPageProperty
+  // idToUuid
 } from 'notion-utils'
 import { ExtendedRecordMap } from 'notion-types'
 
@@ -43,11 +43,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const block = recordMap?.block?.[keys[0]]?.value
     if (!block) continue
 
-    const parentPage = getBlockParentPage(block, recordMap)
+    // const parentPage = getBlockParentPage(block, recordMap)
     const isBlogPost =
-      block.type === 'page' &&
-      block.parent_table === 'collection' &&
-      parentPage?.id === idToUuid(config.rootNotionPageId)
+      block.type === 'page' && block.parent_table === 'collection'
+    // && parentPage?.id === idToUuid(config.rootNotionPageId)
     if (!isBlogPost) {
       continue
     }
