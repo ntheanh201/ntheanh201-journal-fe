@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { GetStaticProps } from 'next'
-import { isDev, domain } from 'lib/config'
+import { domain, isDev } from 'lib/config'
 import { PageProps, Params } from 'lib/types'
-import { NotionPage } from 'components'
 import { resolveJournalPage } from '../lib/journal/resolve-journal-page'
+import { NotionPage } from '../components'
 
 export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   context
@@ -58,7 +58,6 @@ export async function getStaticPaths() {
 }
 
 export default function NotionDomainDynamicPage(props) {
-  // return <NotionPage {...props} />
-  console.log(props)
-  return <div>Post</div>
+  return <NotionPage {...props} />
+  // return <div>Post</div>
 }
