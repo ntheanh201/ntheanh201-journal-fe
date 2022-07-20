@@ -25,9 +25,6 @@ export interface Site {
   name: string
   domain: string
 
-  rootNotionPageId: string
-  rootNotionSpaceId: string
-
   // settings
   html?: string
   fontFamily?: string

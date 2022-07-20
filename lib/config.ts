@@ -16,21 +16,6 @@ import {
   Site
 } from './types'
 
-export const rootNotionPageId: string = parsePageId(
-  getSiteConfig('rootNotionPageId'),
-  { uuid: false }
-)
-
-if (!rootNotionPageId) {
-  throw new Error('Config error invalid "rootNotionPageId"')
-}
-
-// if you want to restrict pages to a single notion workspace (optional)
-export const rootNotionSpaceId: string | null = parsePageId(
-  getSiteConfig('rootNotionSpaceId', null),
-  { uuid: true }
-)
-
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},
   { label: 'pageUrlOverrides' }
@@ -135,8 +120,7 @@ export const api = {
   searchNotion: `${apiBaseUrl}/search-notion`,
   getSocialImage: `${apiBaseUrl}/social-image`,
   getPages: `${journalApiBaseUrl}/pages`,
-  getPage: (id: string) => `${journalApiBaseUrl}/pages/${id}`,
-  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/blocks/${id}`,
+  getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/blocks/${id}`
 }
 
 // ----------------------------------------------------------------------------
@@ -144,8 +128,6 @@ export const api = {
 export const site: Site = {
   domain,
   name,
-  rootNotionPageId,
-  rootNotionSpaceId,
   description
 }
 

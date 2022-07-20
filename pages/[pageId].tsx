@@ -13,7 +13,13 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   try {
     const props = await resolveJournalPage(domain, rawPageId)
 
-    return { props, revalidate: 10 }
+    if (!props) {
+      return {
+        notFound: true
+      }
+    }
+
+    return { props }
   } catch (err) {
     console.error('page error', domain, rawPageId, err)
 
@@ -52,5 +58,7 @@ export async function getStaticPaths() {
 }
 
 export default function NotionDomainDynamicPage(props) {
-  return <NotionPage {...props} />
+  // return <NotionPage {...props} />
+  console.log(props)
+  return <div>Post</div>
 }

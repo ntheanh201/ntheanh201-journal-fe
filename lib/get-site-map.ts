@@ -10,10 +10,11 @@ import * as types from './types'
 const uuid = !!includeNotionIdInUrls
 
 export async function getSiteMap(): Promise<types.SiteMap> {
-  const partialSiteMap = await getAllPages(
-    config.rootNotionPageId,
-    config.rootNotionSpaceId
-  )
+  // const partialSiteMap = await getAllPages(
+  //   config.rootNotionPageId,
+  //   config.rootNotionSpaceId
+  // )
+  const partialSiteMap = null
 
   return {
     site: config.site,

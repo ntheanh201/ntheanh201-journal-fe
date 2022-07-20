@@ -1,9 +1,9 @@
 import * as types from './types'
 
 export interface SiteConfig {
-  rootNotionPageId: string
   rootNotionSpaceId?: string
 
+  apiUrl: string
   name: string
   domain: string
   author: string
