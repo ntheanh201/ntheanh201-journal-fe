@@ -1,11 +1,11 @@
 import pMemoize from 'p-memoize'
 import { getAllPagesInSpace, uuidToId } from 'notion-utils'
 
-import { includeNotionIdInUrls } from './config'
-import { notion } from './notion-api'
-import { getCanonicalPageId } from './get-canonical-page-id'
 import * as config from './config'
+import { includeNotionIdInUrls } from './config'
+import { getCanonicalPageId } from './get-canonical-page-id'
 import * as types from './types'
+import { getJournalPage } from './journal/get-page'
 
 const uuid = !!includeNotionIdInUrls
 
@@ -32,7 +32,7 @@ async function getAllPagesImpl(
 ): Promise<Partial<types.SiteMap>> {
   const getPage = async (pageId: string, ...args) => {
     console.log('\nnotion getPage', uuidToId(pageId))
-    return notion.getPage(pageId, ...args)
+    return getJournalPage(pageId, ...args)
   }
 
   const pageMap = await getAllPagesInSpace(

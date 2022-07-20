@@ -14,10 +14,9 @@ import TweetEmbed from 'react-tweet-embed'
 import { NotionRenderer } from 'react-notion-x'
 
 // utils
-import { getBlockTitle, getPageProperty, formatDate } from 'notion-utils'
-import { mapPageUrl, getCanonicalPageUrl } from 'lib/map-page-url'
+import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
+import { getCanonicalPageUrl, mapPageUrl } from 'lib/map-page-url'
 import { mapImageUrl } from 'lib/map-image-url'
-import { searchNotion } from 'lib/search-notion'
 import { useDarkMode } from 'lib/use-dark-mode'
 import * as types from 'lib/types'
 import * as config from 'lib/config'
@@ -147,11 +146,11 @@ const propertyTextValue = (
 }
 
 export const NotionPage: React.FC<types.PageProps> = ({
-  site,
-  recordMap,
-  error,
-  pageId
-}) => {
+                                                        site,
+                                                        recordMap,
+                                                        error,
+                                                        pageId
+                                                      }) => {
   const router = useRouter()
   const lite = useSearchParam('lite')
 
@@ -220,7 +219,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
     isDev: config.isDev,
     title,
     pageId,
-    rootNotionPageId: site.rootNotionPageId,
     recordMap
   })
 
@@ -237,8 +235,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
 
   const socialImage = mapImageUrl(
     getPageProperty<string>('Social Image', block, recordMap) ||
-      (block as PageBlock).format?.page_cover ||
-      config.defaultPageCover,
+    (block as PageBlock).format?.page_cover ||
+    config.defaultPageCover,
     block
   )
 
@@ -262,13 +260,13 @@ export const NotionPage: React.FC<types.PageProps> = ({
 
       <NotionRenderer
         bodyClassName={cs(
-          styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
+          styles.notion
+          // pageId === site.rootNotionPageId && 'index-page'
         )}
         darkMode={isDarkMode}
         components={components}
         recordMap={recordMap}
-        rootPageId={site.rootNotionPageId}
+        // rootPageId={site.rootNotionPageId}
         rootDomain={site.domain}
         fullPage={!isLiteMode}
         previewImages={!!recordMap.preview_images}
@@ -280,7 +278,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
         defaultPageCoverPosition={config.defaultPageCoverPosition}
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
-        searchNotion={config.isSearchEnabled ? searchNotion : null}
+        searchNotion={null}
         pageAside={pageAside}
         footer={footer}
       />
