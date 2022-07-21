@@ -1,28 +1,63 @@
 import { OptionsOfJSONResponseBody } from 'got/dist/source/types'
 import { ExtendedRecordMap } from 'notion-types'
-import { getBlockCollectionId, getPageContentBlockIds, uuidToId } from 'notion-utils'
+import {
+  getBlockCollectionId,
+  getPageContentBlockIds,
+  parsePageId,
+  uuidToId
+} from 'notion-utils'
 import pMap from 'p-map'
 import { api } from '../config'
 import { SignedUrlRequest } from 'notion-client'
 import { getCollectionData } from './get-collection-data'
+import { NotionAPI } from 'notion-client'
 
-async function getJournalPageImpl(id: string): Promise<any> {
-  return fetch(api.getBlockChildren(id), {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json'
-    }
+const getPageRaw = async (
+  pageId: string,
+  {
+    gotOptions,
+    chunkLimit = 100,
+    chunkNumber = 0
+  }: {
+    chunkLimit?: number
+    chunkNumber?: number
+    gotOptions?: OptionsOfJSONResponseBody
+  } = {}
+) => {
+  console.log(
+    'got options: ',
+    gotOptions,
+    chunkLimit,
+    chunkNumber,
+    parsePageId('ce04cf6feb4d4b13802c532fbe37f30a')
+  )
+
+  // const data = await new NotionAPI().getPageRaw(
+  //   'ce04cf6feb4d4b13802c532fbe37f30a',
+  //   {
+  //     chunkLimit,
+  //     chunkNumber
+  //     // gotOptions
+  //   }
+  // )
+
+  const body = JSON.stringify({
+    limit: chunkLimit,
+    chunkNumber: chunkNumber,
+    cursor: { stack: [] },
+    verticalColumns: false
   })
-    .then((res) => {
-      if (res.ok) {
-        return res
-      }
+  const res = await fetch(api.getBlockChildren(pageId), {
+    method: 'POST',
+    // headers: {
+    //   'content-type': 'application/json'
+    // },
+    body
+  })
+  const data = await res.json()
 
-      const error: any = new Error(res.statusText)
-      error.response = res
-      return Promise.reject(error)
-    })
-    .then((res) => res.json())
+  console.log('data: ', data)
+  return data
 }
 
 export const getJournalPage = async (
@@ -32,6 +67,8 @@ export const getJournalPage = async (
     fetchMissingBlocks = true,
     fetchCollections = true,
     signFileUrls = true,
+    chunkLimit = 100,
+    chunkNumber = 0,
     gotOptions
   }: {
     concurrency?: number
@@ -43,26 +80,24 @@ export const getJournalPage = async (
     gotOptions?: OptionsOfJSONResponseBody
   } = {}
 ): Promise<ExtendedRecordMap> => {
-  const page = await getJournalPageImpl(pageId
-    // {
-    //   chunkLimit,
-    //   chunkNumber,
-    //   gotOptions
-    // }
-  )
+  const page = await getPageRaw(pageId, {
+    chunkLimit,
+    chunkNumber,
+    gotOptions
+  })
   const recordMap = page?.recordMap as ExtendedRecordMap
 
   if (!recordMap?.block) {
     throw new Error(`Notion page not found "${uuidToId(pageId)}"`)
   }
 
-// ensure that all top-level maps exist
+  // ensure that all top-level maps exist
   recordMap.collection = recordMap.collection ?? {}
   recordMap.collection_view = recordMap.collection_view ?? {}
   recordMap.notion_user = recordMap.notion_user ?? {}
 
-// additional mappings added for convenience
-// note: these are not native notion objects
+  // additional mappings added for convenience
+  // note: these are not native notion objects
   recordMap.collection_query = {}
   recordMap.signed_urls = {}
 
@@ -78,10 +113,9 @@ export const getJournalPage = async (
         break
       }
 
-      const newBlocks = await getBlocks(
-        pendingBlockIds,
-        gotOptions
-      ).then((res) => res.recordMap.block)
+      const newBlocks = await getBlocks(pendingBlockIds, gotOptions).then(
+        (res) => res.recordMap.block
+      )
 
       recordMap.block = { ...recordMap.block, ...newBlocks }
     }
@@ -89,11 +123,11 @@ export const getJournalPage = async (
 
   const contentBlockIds = getPageContentBlockIds(recordMap)
 
-// Optionally fetch all data for embedded collections and their associated views.
-// NOTE: We're eagerly fetching *all* data for each collection and all of its views.
-// This is really convenient in order to ensure that all data needed for a given
-// Notion page is readily available for use cases involving server-side rendering
-// and edge caching.
+  // Optionally fetch all data for embedded collections and their associated views.
+  // NOTE: We're eagerly fetching *all* data for each collection and all of its views.
+  // This is really convenient in order to ensure that all data needed for a given
+  // Notion page is readily available for use cases involving server-side rendering
+  // and edge caching.
   if (fetchCollections) {
     const allCollectionInstances: Array<{
       collectionId: string
@@ -176,10 +210,10 @@ export const getJournalPage = async (
     )
   }
 
-// Optionally fetch signed URLs for any embedded files.
-// NOTE: Similar to collection data, we default to eagerly fetching signed URL info
-// because it is preferable for many use cases as opposed to making these API calls
-// lazily from the client-side.
+  // Optionally fetch signed URLs for any embedded files.
+  // NOTE: Similar to collection data, we default to eagerly fetching signed URL info
+  // because it is preferable for many use cases as opposed to making these API calls
+  // lazily from the client-side.
   if (signFileUrls) {
     await addSignedUrls({ recordMap, contentBlockIds, gotOptions })
   }
@@ -188,10 +222,10 @@ export const getJournalPage = async (
 }
 
 const addSignedUrls = async ({
-                               recordMap,
-                               contentBlockIds,
-                               gotOptions = {}
-                             }: {
+  recordMap,
+  contentBlockIds,
+  gotOptions = {}
+}: {
   recordMap: ExtendedRecordMap
   contentBlockIds?: string[]
   gotOptions?: OptionsOfJSONResponseBody
@@ -263,20 +297,23 @@ const getBlocks = async (
   blockIds: string[],
   gotOptions?: OptionsOfJSONResponseBody
 ) => {
+  console.log('queryGetBlocks: ', blockIds)
   // TODO: add Backend api
+  const body = JSON.stringify({
+    requests: blockIds.map((blockId) => ({
+      // TODO: when to use table 'space' vs 'block'?
+      table: 'block',
+      id: blockId,
+      version: -1
+    }))
+  })
+  console.log('bodyGetBlocks: ', body)
   return fetch(api.getBlocks, {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'content-type': 'application/json'
     },
-    body: JSON.stringify({
-      requests: blockIds.map((blockId) => ({
-        // TODO: when to use table 'space' vs 'block'?
-        table: 'block',
-        id: blockId,
-        version: -1
-      }))
-    })
+    body
   })
     .then((res) => {
       if (res.ok) {
@@ -295,14 +332,16 @@ const getSignedFileUrls = async (
   gotOptions?: OptionsOfJSONResponseBody
 ) => {
   // TODO: add Backend api
+  const body = JSON.stringify({
+    urls
+  })
+  console.log('bodyGetSignedFileUrls: ', body)
   return fetch(api.getSignedFileUrls, {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'content-type': 'application/json'
     },
-    body: JSON.stringify({
-      urls
-    })
+    body
   })
     .then((res) => {
       if (res.ok) {

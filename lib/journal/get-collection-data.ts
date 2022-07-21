@@ -72,15 +72,15 @@ export const getCollectionData = (
         const iteratorProps =
           iterator === 'results'
             ? {
-              type: iterator,
-              limit
-            }
-            : {
-              type: 'aggregation',
-              aggregation: {
-                aggregator: 'count'
+                type: iterator,
+                limit
               }
-            }
+            : {
+                type: 'aggregation',
+                aggregation: {
+                  aggregator: 'count'
+                }
+              }
 
         const isUncategorizedValue = typeof value === 'undefined'
         const isDateValue = value?.range
@@ -88,8 +88,8 @@ export const getCollectionData = (
         const queryLabel = isUncategorizedValue
           ? 'uncategorized'
           : isDateValue
-            ? value.range?.start_date || value.range?.end_date
-            : value?.value || value
+          ? value.range?.start_date || value.range?.end_date
+          : value?.value || value
 
         const queryValue =
           !isUncategorizedValue && (isDateValue || value?.value || value)
@@ -172,20 +172,22 @@ export const getCollectionData = (
   // }
 
   // TODO: add Backend api
+  const body = JSON.stringify({
+    collection: {
+      id: collectionId
+    },
+    collectionView: {
+      id: collectionViewId
+    },
+    loader
+  })
+  console.log('bodyQueryCollection: ', body)
   return fetch(api.queryCollection, {
-    method: 'GET',
+    method: 'POST',
     headers: {
       'content-type': 'application/json'
     },
-    body: JSON.stringify({
-      collection: {
-        id: collectionId
-      },
-      collectionView: {
-        id: collectionViewId
-      },
-      loader
-    })
+    body
   })
     .then((res) => {
       if (res.ok) {

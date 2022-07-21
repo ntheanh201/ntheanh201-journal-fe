@@ -9,7 +9,12 @@ import { parsePageId } from 'notion-utils'
 import posthog from 'posthog-js'
 import { getEnv, getSiteConfig } from './get-config-value'
 import { NavigationLink } from './site-config'
-import { NavigationStyle, PageUrlOverridesInverseMap, PageUrlOverridesMap, Site } from './types'
+import {
+  NavigationStyle,
+  PageUrlOverridesInverseMap,
+  PageUrlOverridesMap,
+  Site
+} from './types'
 
 export const pageUrlOverrides = cleanPageUrlMap(
   getSiteConfig('pageUrlOverrides', {}) || {},
@@ -119,7 +124,7 @@ export const api = {
   getBlockChildren: (id: string) => `${journalApiBaseUrl}/pages/record/${id}`,
   getBlocks: `${journalApiBaseUrl}/pages/syncRecordValues`,
   getSignedFileUrls: `${journalApiBaseUrl}/pages/getSignedFileUrls`,
-  queryCollection: `${journalApiBaseUrl}/queryCollection`
+  queryCollection: `${journalApiBaseUrl}/pages/queryCollection`
 }
 
 // ----------------------------------------------------------------------------
@@ -133,8 +138,8 @@ export const site: Site = {
 export const fathomId = isDev ? null : process.env.NEXT_PUBLIC_FATHOM_ID
 export const fathomConfig = fathomId
   ? {
-    excludedDomains: ['localhost', 'localhost:3000']
-  }
+      excludedDomains: ['localhost', 'localhost:3000']
+    }
   : undefined
 
 export const posthogId = process.env.NEXT_PUBLIC_POSTHOG_ID

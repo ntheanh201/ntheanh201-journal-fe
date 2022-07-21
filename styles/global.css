@@ -9,11 +9,12 @@ html {
 }
 
 body {
-  --notion-font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-  'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-  'Droid Sans', 'Helvetica Neue', 'Noto Sans', sans-serif;
-  font-family: var(--notion-font);
+  /*--notion-font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,*/
+  /*'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',*/
+  /*'Droid Sans', 'Helvetica Neue', 'Noto Sans', sans-serif;*/
+  /*font-family: var(--notion-font);*/
   overflow-x: hidden;
+  line-height: 1.5em;
 }
 
 .static-tweet blockquote {
@@ -27,4 +28,16 @@ body {
 .static-tweet-emoji {
   height: 1.2em !important;
   width: 1.2em !important;
+}
+
+.notion-app {
+  background: inherit !important;
+}
+
+.notion-aside-table-of-contents {
+  background-color: #fcfcf7 !important;
+}
+
+.notion-page {
+  padding: 0 !important;
 }

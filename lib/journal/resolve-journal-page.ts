@@ -12,10 +12,9 @@ export async function resolveJournalPages() {
 }
 
 export async function resolveJournalPage(domain: string, rawPageId?: string) {
-  let recordMap: ExtendedRecordMap
   const pageId = rawPageId
 
-  recordMap = await getPage(pageId)
+  const recordMap: ExtendedRecordMap = await getPage(pageId)
 
   const props = { site, recordMap, pageId }
   // return { ...props, ...(await acl.pageAcl(props)) }

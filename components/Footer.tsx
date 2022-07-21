@@ -126,4 +126,8 @@ export const FooterImpl: React.FC = () => {
   )
 }
 
-export const Footer = React.memo(FooterImpl)
+export const FooterImpl2 = () => {
+  return null
+}
+
+export const Footer = React.memo(FooterImpl2)
